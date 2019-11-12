@@ -18,8 +18,8 @@
                         id="number"
                         ref="number"
                         name="number"
-                        label="Card Number"
-                        placeholder="Credit Card Number"
+                        :label="cardNumberPlaceholder"
+                        :placeholder="cardNumberPlaceholder"
                         @validate="onValidate"
                         @card-types.native="onCardTypeChange"
                         @valid.native="() => onValid('number', showName ? 'name' : 'expMonth')">
@@ -53,8 +53,8 @@
                             id="name"
                             ref="name"
                             name="name"
-                            label="Name"
-                            placeholder="Name on Card"
+                            :label="cardNamePlaceholder"
+                            :placeholder="cardNamePlaceholder"
                             class="credit-card-field-name"
                         />
                     </div>
@@ -73,8 +73,8 @@
                             id="expMonth"
                             ref="expMonth"
                             name="expMonth"
-                            label="Month"
-                            placeholder="Month"
+                            :label="cardMonthPlaceholder"
+                            :placeholder="cardMonthPlaceholder"
                             class="credit-card-field-month"
                             @valid.native="() => onValid('expMonth', 'expYear')">
                             <option v-for="i in 12" :key="i">{{ padZero(i, 2) }}</option>
@@ -92,8 +92,8 @@
                             id="expYear"
                             ref="expYear"
                             name="expYear"
-                            label="Year"
-                            placeholder="Year"
+                            :label="cardYearPlaceholder"
+                            :placeholder="cardYearPlaceholder"
                             class="credit-card-field-year"
                             @valid.native="() => onValid('expYear', 'cvc')">
                             <option v-for="i in years" :key="i">{{i}}</option>
@@ -108,8 +108,8 @@
                             :disabled="activity"
                             :errors="currentErrors"
                             :maxlength="code && code.size"
-                            :label="code && code.name || 'CVC'"
-                            :placeholder="code && code.name || 'CVC'"
+                            :label="code && code.name || cardCvvPlaceholder"
+                            :placeholder="code && code.name || cardCvvPlaceholder"
                             :validator="() => type && type.code.size"
                             custom
                             id="cvc"
@@ -134,8 +134,8 @@
                             ref="zip"
                             name="zip"
                             maxlength="5"
-                            label="Zip Code"
-                            placeholder="Zip Code"
+                            :label="cardZipCodePlaceholder"
+                            :placeholder="cardZipCodePlaceholder"
                             class="credit-card-field-zip"
                             @valid.native="() => onValid('zip')"
                         />
@@ -223,6 +223,36 @@ export default {
         cvc: String,
 
         zip: String,
+        
+        cardNumberPlaceholder: {
+            type: String,
+            default: 'Card number'
+        },
+        
+        cardNamePlaceholder: {
+            type: String,
+            default: 'Name'
+        },
+        
+        cardMonthPlaceholder: {
+            type: String,
+            default: 'Month'
+        },
+        
+        cardYearPlaceholder: {
+            type: String,
+            default: 'Year'
+        },
+        
+        cardCvvPlaceholder: {
+            type: String,
+            default: 'CVV'
+        },
+        
+        cardZipCodePlaceholder: {
+            type: String,
+            default: 'Zip Code'
+        },
         
         showName: {
             type: Boolean,
