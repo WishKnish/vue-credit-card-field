@@ -1,7 +1,7 @@
-import pkg from "../package.json";
-import { kebabCase } from 'lodash';
-import { camelCase } from 'lodash';
-import { upperFirst } from 'lodash';
+import pkg from '../package.json';
+import { kebabCase, } from 'lodash';
+import { camelCase, } from 'lodash';
+import { upperFirst, } from 'lodash';
 import * as argsConfig from './config/args';
 import * as pathsConfig from './config/paths';
 import buildConfig from './config/build';

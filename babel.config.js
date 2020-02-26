@@ -2,11 +2,11 @@ module.exports = {
     presets: [
         ['@vue/app', {
             targets: {
-                node: "current"
-            }
-        }]
+                node: 'current',
+            },
+        },],
     ],
     ignore: [
-        "node_modules",
-    ]
-}
+        'node_modules',
+    ],
+};

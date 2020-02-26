@@ -1,5 +1,5 @@
-import { attribute, input, shouldFormat } from '../Helpers';
-import { creditCardType } from 'card-validator';
+import { attribute, input, shouldFormat, } from '../Helpers';
+import { creditCardType, } from 'card-validator';
 
 export default {
 
@@ -14,7 +14,7 @@ export default {
             if(value !== prevValue || force) {
                 event = new Event('card-types');
                 event.types = types;
-                
+
                 el.dispatchEvent(event);
             }
 
@@ -26,7 +26,7 @@ export default {
         el.addEventListener('paste', e => {
             const clipboardData = e.clipboardData || window.clipboardData;
             const value = clipboardData.getData('text/plain');
-            
+
             dispatch(value);
         });
 
@@ -35,18 +35,18 @@ export default {
                 dispatch(e.target.value);
             }
         });
-        
-        el.addEventListener('card-types', ({ types }) => {
-            const [ type ] = types;
-            
+
+        el.addEventListener('card-types', ({ types, }) => {
+            const [ type, ] = types;
+
             attribute(el, 'maxlength', type && (type.gaps.length + type.lengths.pop()));
         });
 
-        const { value } = input(el);
+        const { value, } = input(el);
 
         if(value) {
             vnode.context.$nextTick(() => dispatch(value, true));
         }
-    }
+    },
 
 };

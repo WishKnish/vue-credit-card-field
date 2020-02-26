@@ -4,7 +4,7 @@ var ManifestPlugin = require('webpack-manifest-plugin');
 module.exports = {
     configureWebpack: {
         output: {
-            libraryExport: 'default'
+            libraryExport: 'default',
         },
         plugins: [
             // new ManifestPlugin()
@@ -17,10 +17,10 @@ module.exports = {
             // the source template
             template: './public/index.html',
             // the output filename
-            filename: 'index.html'
-        }
+            filename: 'index.html',
+        },
     },
     publicPath: process.env.NODE_ENV === 'production' ? 'http://thecapsule.email/dist' : '/',
     assetsDir: './src/assets',
-    outputDir: './dist'
-}
+    outputDir: './dist',
+};

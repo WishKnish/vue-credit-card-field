@@ -1,4 +1,4 @@
-import { argv } from 'yargs';
+import { argv, } from 'yargs';
 
 // Sould run the watcher?
 export const WATCH = !!argv.watch;

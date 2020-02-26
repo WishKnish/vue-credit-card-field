@@ -8,7 +8,7 @@ import license from 'rollup-plugin-license';
 import postcss from 'rollup-plugin-postcss';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify-es';
-import { eslint } from "rollup-plugin-eslint";
+import { eslint, } from 'rollup-plugin-eslint';
 import progress from 'rollup-plugin-progress';
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
@@ -25,7 +25,7 @@ import {
     LIVERELOAD_OPTIONS,
     POSTCSS_PLUGINS,
     SERVE_OPTIONS,
-    WATCH
+    WATCH,
 } from './config';
 
 // An array of shared plugin. These will not be instantiated more than once.
@@ -63,14 +63,14 @@ export default (config = {}) => {
             main: true,
             jsnext: true,
             browser: true,
-            extensions: [ '.js', '.vue']
+            extensions: [ '.js', '.vue',],
         }, config.resolve)),
 
         // rollup-plugin-commonjs
         commonjs(Object.assign({
-            include: NODE_MODULES
+            include: NODE_MODULES,
         }, config.commonjs)),
-        
+
         // rollup-plugin-css-only
         css(),
 
@@ -78,32 +78,32 @@ export default (config = {}) => {
         vue(Object.assign({
             css: false,
             defaultLang: {
-                style: 'postcss'
-            }
+                style: 'postcss',
+            },
         }, config.vue || config.vuePlugin)),
 
         // rollup-plugin-postcss
         postcss(Object.assign({
             inject: INJECT_CSS,
             extract: EXTRACT_CSS,
-            plugins: POSTCSS_PLUGINS.filter(value => !!value)
+            plugins: POSTCSS_PLUGINS.filter(value => !!value),
         }, config.postcss)),
 
         // rollup-plugin-eslint
         eslint(Object.assign({
-            exclude: ['**/.scss', '**/*.css']
+            exclude: ['**/.scss', '**/*.css',],
         }, config.eslint)),
 
         // rollup-plugin-babel
         babel(Object.assign({
-            exclude: NODE_MODULES
+            exclude: NODE_MODULES,
         }, config.babel)),
 
         // rollup-plugin-replace
         replace(Object.assign({
             'process.env.NODE_ENV': JSON.stringify(WATCH ? 'development' : 'production'),
             'process.env.SERVE_OPTIONS': JSON.stringify(SERVE_OPTIONS),
-            'process.env.LIVERELOAD_OPTIONS': JSON.stringify(LIVERELOAD_OPTIONS)
+            'process.env.LIVERELOAD_OPTIONS': JSON.stringify(LIVERELOAD_OPTIONS),
         }, config.replace)),
 
         // rollup-plugin-license
@@ -111,7 +111,7 @@ export default (config = {}) => {
             sourceMap: true,
             banner: {
                 file: path.join(__dirname, 'BANNER'),
-                encoding: 'utf-8'
+                encoding: 'utf-8',
             },
             thirdParty: {
                 output: path.join(__dirname, 'dependencies.txt'),
@@ -130,7 +130,7 @@ export default (config = {}) => {
         builtins(config.builtins),
 
         // rollup-plugin-progress
-        progress(config.progress)
+        progress(config.progress),
     ];
 
     // If the MINIFY constant is set, then add the uglify plugin.

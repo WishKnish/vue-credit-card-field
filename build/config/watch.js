@@ -1,9 +1,9 @@
 // import fs from 'fs';
-import { SRC } from './paths';
+import { SRC, } from './paths';
 
 export default {
     include: `${SRC}**/*`,
-    extensions: ['.js', '.scss', '.vue'],
+    extensions: ['.js', '.scss', '.vue',],
     /*
     https: {
         key: fs.readFileSync('./livereload.key'),

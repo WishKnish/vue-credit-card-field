@@ -1,13 +1,13 @@
 <template>
-
     <div class="credit-card-field" :class="{'has-brand': !!type, 'has-errors': hasErrors, [`is-focused-${focused}`]: focused}">
-
         <form-group>
             <div class="credit-card-field-rows">
                 <div class="credit-card-field-row" :class="{'has-error': currentErrors.number}">
                     <input-field
-                        v-card-number
+                        id="number"
+                        ref="number"
                         v-model="card.numberFormatted"
+                        v-card-number
                         v-bubble:blur="onBlur"
                         v-bubble:focus="() => focused = 'number'"
                         v-validate:number="validated.number"
@@ -15,8 +15,6 @@
                         :error="error"
                         :errors="currentErrors"
                         custom
-                        id="number"
-                        ref="number"
                         name="number"
                         :label="cardNumberPlaceholder"
                         :placeholder="cardNumberPlaceholder"
@@ -29,79 +27,84 @@
                                 <div v-else key="icons" class="credit-card-icons">
                                     <animate-css mode="out-in" name="flip" y>
                                         <div v-if="focused !== 'cvc'" key="front" class="credit-card-field-icon-card">
-                                            <icon :icon="[icon ? 'fab' : 'far', icon || 'credit-card']" :data-brand="type && type.niceType || 'unknown'" class="credit-card-field-icon" width="20" height="18"/>
-                                        </div>                                
+                                            <icon :icon="[icon ? 'fab' : 'far', icon || 'credit-card']" :data-brand="type && type.niceType || 'unknown'" class="credit-card-field-icon" width="20" height="18" />
+                                        </div>
                                         <div v-else key="back" class="credit-card-field-icon-card">
-                                            <icon :icon="['fas', 'credit-card']" class="credit-card-field-icon" width="23.33" height="20"/>
-                                        </div>                                
+                                            <icon :icon="['fas', 'credit-card']" class="credit-card-field-icon" width="23.33" height="20" />
+                                        </div>
                                     </animate-css>
-                                </div>                          
+                                </div>
                             </animate-css>
                         </template>
                     </input-field>
                 </div>
-                
+
                 <animate-css name="fade">
                     <div v-if="showSecurityFields && showName" class="credit-card-field-row" :class="{'has-error': currentErrors.name}">
                         <input-field
+                            id="name"
+                            ref="name"
                             v-model="card.name"
                             v-bubble:focus="() => focused = 'name'"
                             v-validate:name="validated.name"
                             :disabled="activity"
                             :errors="currentErrors"
                             custom
-                            id="name"
-                            ref="name"
                             name="name"
                             :label="cardNamePlaceholder"
                             :placeholder="cardNamePlaceholder"
-                            class="credit-card-field-name"
-                        />
+                            class="credit-card-field-name" />
                     </div>
                 </animate-css>
                 <animate-css name="fade">
-                    <div v-if="showSecurityFields" class="credit-card-field-row d-flex" :class="{'has-error': currentErrors.expMonth || currentErrors.expYear || currentErrors.cvc || currentErrors.zip}">
+                    <div v-if="showSecurityFields" class="credit-card-field-row d-flex" :class="{'has-error': currentErrors.expMonth || currentErrors.expYear || currentErrors.cvc}">
                         <select-field
-                            v-bubble
+                            id="expMonth"
+                            ref="expMonth"
                             v-model="card.expMonth"
+                            v-bubble
                             v-bubble:blur="onBlur"
                             v-bubble:focus="() => focused = 'expMonth'"
                             v-validate:month="validated.expMonth"
                             :disabled="activity"
                             :errors="currentErrors"
                             custom
-                            id="expMonth"
-                            ref="expMonth"
                             name="expMonth"
                             :label="cardMonthPlaceholder"
                             :placeholder="cardMonthPlaceholder"
                             class="credit-card-field-month"
                             @valid.native="() => onValid('expMonth', 'expYear')">
-                            <option v-for="i in 12" :key="i">{{ padZero(i, 2) }}</option>
+                            <option v-for="i in 12" :key="i">
+                                {{ padZero(i, 2) }}
+                            </option>
                         </select-field>
 
                         <select-field
-                            v-bubble
+                            id="expYear"
+                            ref="expYear"
                             v-model="card.expYear"
+                            v-bubble
                             v-bubble:blur="onBlur"
                             v-bubble:focus="() => focused = 'expYear'"
                             v-validate:year="validated.expYear"
                             :disabled="activity"
                             :errors="currentErrors"
                             custom
-                            id="expYear"
-                            ref="expYear"
                             name="expYear"
                             :label="cardYearPlaceholder"
                             :placeholder="cardYearPlaceholder"
                             class="credit-card-field-year"
                             @valid.native="() => onValid('expYear', 'cvc')">
-                            <option v-for="i in years" :key="i">{{i}}</option>
+                            <option v-for="i in years" :key="i">
+                                {{ i }}
+                            </option>
                         </select-field>
 
                         <input-field
-                            v-bubble
+                            id="cvc"
+                            ref="cvc"
                             v-model="card.cvc"
+                            v-bubble
                             v-bubble:blur="onBlur"
                             v-bubble:focus="() => focused = 'cvc'"
                             v-validate:cvc="validated.cvc"
@@ -112,39 +115,29 @@
                             :placeholder="code && code.name || cardCvvPlaceholder"
                             :validator="() => type && type.code.size"
                             custom
-                            id="cvc"
-                            ref="cvc"
                             name="cvc"
                             class="credit-card-field-cvc"
-                            @valid.native="() => onValid('cvc', 'zip')"
-                        />
+                            @valid.native="() => onValid('cvc', 'zip')" />
 
                         <input-field
-                            v-if="showZip"
-                            v-bubble
+                            id="zip"
                             v-model="card.zip"
+                            v-bubble
                             v-bubble:blur="onBlur"
                             v-bubble:focus="() => focused = 'zip'"
-                            v-validate:zip="validated.zip"
                             :disabled="activity"
                             :errors="currentErrors"
-                            :validator="{minLength: 5}"
                             custom
-                            id="zip"
-                            ref="zip"
                             name="zip"
-                            maxlength="5"
+                            :maxlength="cardZipCodeMaxLength"
                             :label="cardZipCodePlaceholder"
                             :placeholder="cardZipCodePlaceholder"
-                            class="credit-card-field-zip"
-                            @valid.native="() => onValid('zip')"
-                        />
+                            class="credit-card-field-zip" />
                     </div>
                 </animate-css>
             </div>
 
-            <slot/>
-
+            <slot />
         </form-group>
 
         <slot name="help">
@@ -152,24 +145,22 @@
         </slot>
 
         <slot name="feedback">
-            <form-feedback v-if="validFeedback" v-html="validFeedback" valid />
-            <form-feedback v-if="invalidFeedback" v-html="invalidFeedback" invalid />
+            <form-feedback v-if="validFeedback" valid v-html="validFeedback" />
+            <form-feedback v-if="invalidFeedback" invalid v-html="invalidFeedback" />
         </slot>
-
     </div>
-
 </template>
 
 <script>
 import '../icons';
 import Payment from 'payment';
-import { format, input } from '../Helpers';
+import { format, input, } from '../Helpers';
 import Bubble from '../Directives/Bubble';
 import Validate from '../Directives/Validate';
 import CardNumber from '../Directives/CardNumber';
 import Variant from 'vue-interface/src/Mixins/Variant';
 import HelpText from 'vue-interface/src/Components/HelpText';
-import { pickBy } from 'vue-interface/src/Helpers/Functions';
+import { pickBy, } from 'vue-interface/src/Helpers/Functions';
 import FormControl from 'vue-interface/src/Mixins/FormControl';
 import FormGroup from 'vue-interface/src/Components/FormGroup';
 import InputField from 'vue-interface/src/Components/InputField';
@@ -177,22 +168,16 @@ import MergeClasses from 'vue-interface/src/Mixins/MergeClasses';
 import AnimateCss from 'vue-interface/src/Components/AnimateCss';
 import SelectField from 'vue-interface/src/Components/SelectField';
 import FormFeedback from 'vue-interface/src/Components/FormFeedback';
-import { FontAwesomeIcon as Icon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon as Icon, } from '@fortawesome/vue-fontawesome';
 import ActivityIndicator from 'vue-interface/src/Components/ActivityIndicator';
 
 const ICONS = {
-    'american-express': 'amex'
+    'american-express': 'amex',
 };
 
 export default {
 
     name: 'CreditCardField',
-
-    mixins: [
-        MergeClasses,
-        Variant,
-        FormControl
-    ],
 
     components: {
         Icon,
@@ -202,19 +187,31 @@ export default {
         InputField,
         SelectField,
         FormFeedback,
-        ActivityIndicator
+        ActivityIndicator,
     },
+
+    directives: {
+        Bubble,
+        Validate,
+        CardNumber,
+    },
+
+    mixins: [
+        MergeClasses,
+        Variant,
+        FormControl,
+    ],
 
     props: {
 
         activity: {
             type: Boolean,
-            default: false
+            default: false,
         },
 
         name: String,
 
-        number: [Number, String],
+        number: [Number, String,],
 
         expMonth: String,
 
@@ -223,57 +220,127 @@ export default {
         cvc: String,
 
         zip: String,
-        
+
         cardNumberPlaceholder: {
             type: String,
-            default: 'Card number'
+            default: 'Card number',
         },
-        
+
         cardNamePlaceholder: {
             type: String,
-            default: 'Name'
+            default: 'Name',
         },
-        
+
         cardMonthPlaceholder: {
             type: String,
-            default: 'Month'
+            default: 'Month',
         },
-        
+
         cardYearPlaceholder: {
             type: String,
-            default: 'Year'
+            default: 'Year',
         },
-        
+
         cardCvvPlaceholder: {
             type: String,
-            default: 'CVV'
+            default: 'CVV',
         },
-        
+
         cardZipCodePlaceholder: {
             type: String,
-            default: 'Zip Code'
+            default: 'Postal Code',
         },
-        
+
+        cardZipCodeMaxLength: {
+            type: Number,
+            default: 10,
+        },
+
         showName: {
             type: Boolean,
             default() {
                 return !!this.name;
-            }
+            },
         },
-
-        showZip: {
-            type: Boolean,
-            default() {
-                return !!this.zip;
-            }
-        }
-
     },
 
-    directives: {
-        Bubble,
-        Validate,
-        CardNumber
+    data() {
+        const card = this.blankCard({
+            number: this.number,
+            expMonth: this.expMonth,
+            expYear: this.expYear,
+            cvc: this.cvc,
+            zip: this.zip,
+            name: this.name,
+        });
+
+        const validated = Object.keys(card)
+            .reduce((carry, value) => {
+                carry[value] = this.errors[value] ? false : null;
+
+                return carry;
+            }, {});
+
+        return {
+            card,
+            validated,
+            icon: null,
+            code: null,
+            type: null,
+            focused: null,
+            isValid: null,
+            showSecurityFields: !!card.number,
+            currentErrors: Object.assign({
+                number: this.error,
+            }, this.errors),
+        };
+    },
+
+    computed: {
+
+        invalidFeedback() {
+            return this.error || Object.entries(this.currentErrors)
+                .filter(([key, value,]) => !!value && value.toString)
+                .map(([key, value,]) => value.toString())
+                .join('<br>');
+        },
+
+        isPotentiallyValid() {
+            return this.isValid !== false;
+        },
+
+        totalFields() {
+            return Object.entries(this.$refs).length;
+        },
+
+        totalValidFields() {
+            return Object.entries(this.validated)
+                .filter(([key, value,]) => value === true)
+                .length;
+        },
+
+        totalInvalidFields() {
+            return Object.entries(this.validated)
+                .filter(([key, value,]) => value === false)
+                .length;
+        },
+
+        hasErrors() {
+            return !!this.error || !!Object.entries(this.currentErrors)
+                .filter(([key, value,]) => !!value)
+                .length;
+        },
+
+        years() {
+            const years = [], year = new Date().getFullYear();
+
+            for(let i = year; i < year + 15; i++) {
+                years.push(i);
+            }
+
+            return years;
+        },
+
     },
 
     watch: {
@@ -282,20 +349,20 @@ export default {
             deep: true,
             handler(value) {
                 this.$emit('input', Object.assign(this.blankCard(), value));
-            }
+            },
         },
 
         validated: {
             deep: true,
             handler(value, oldValue) {
                 const entries = Object.entries(value);
-
-                entries.forEach(([key, value]) => {
+                entries.forEach(([key, value,]) => {
                     this.$set(this.currentErrors, key, value === false ? (this.currentErrors[key] || true) : false);
                 });
 
                 if(this.showSecurityFields) {
                     this.$nextTick(() => {
+
                         if(this.totalFields === this.totalValidFields) {
                             this.isValid = true;
                         }
@@ -307,7 +374,7 @@ export default {
                         }
                     });
                 }
-            }
+            },
         },
 
         ['card.number'](value) {
@@ -334,6 +401,7 @@ export default {
         },
 
         isValid(value) {
+
             if(value === true) {
                 this.dispatch('valid');
             }
@@ -348,55 +416,13 @@ export default {
 
                 this.$refs[field] && this.$refs[field].focus();
             });
-        }
+        },
 
     },
 
-    computed: {
-
-        invalidFeedback() {
-            return this.error || Object.entries(this.currentErrors)
-                .filter(([key, value]) => !!value && value.toString)
-                .map(([key, value]) => value.toString())
-                .join('<br>');
-        },
-
-        isPotentiallyValid() {
-            return this.isValid !== false;
-        },
-
-        totalFields() {
-            return Object.entries(this.$refs).length
-        },
-
-        totalValidFields() {
-            return Object.entries(this.validated)
-                .filter(([key, value]) => value === true)
-                .length;
-        },
-
-        totalInvalidFields() {
-            return Object.entries(this.validated)
-                .filter(([key, value]) => value === false)
-                .length;
-        },
-
-        hasErrors() {
-            return !!this.error || !!Object.entries(this.currentErrors)
-                .filter(([key, value]) => !!value)
-                .length;
-        },
-
-        years() {
-            const years = [], year = new Date().getFullYear();
-
-            for(let i = year; i < year + 15; i++) {
-                years.push(i);    
-            }
-
-            return years;
-        }
-
+    created() {
+        this.card.numberFormatted = this.card.number;
+        this.updateExpiration();
     },
 
     methods: {
@@ -409,7 +435,7 @@ export default {
                 expYear: null,
                 expiration: null,
                 name: this.showName ? null : undefined,
-                zip: this.showZip ? null : undefined,
+                zip: null,
             }, defaultValues || {}), value => value !== undefined);
         },
 
@@ -423,7 +449,7 @@ export default {
                     el: this.$el.querySelector(':focus'),
                     isValid: null,
                     isPotentiallyValid: null,
-                }
+                },
             });
         },
 
@@ -442,7 +468,7 @@ export default {
         onBlur() {
             setTimeout(() => {
                 if(!this.$el.querySelector(':focus')) {
-                   this.focused = null;
+                    this.focused = null;
                 }
             });
         },
@@ -458,7 +484,7 @@ export default {
             }
         },
 
-        onValidate(el, { isValid, isPotentiallyValid }) {
+        onValidate(el, { isValid, isPotentiallyValid, }) {
             this.$emit('change', {
                 card: this.card,
                 type: this.type,
@@ -467,61 +493,24 @@ export default {
                 input: {
                     el,
                     isValid,
-                    isPotentiallyValid 
-                }
+                    isPotentiallyValid,
+                },
             });
         },
 
-        onCardTypeChange({ types }) {
-            const [ type ] = types;
+        onCardTypeChange({ types, }) {
+            const [ type, ] = types;
 
             this.type = type;
             this.code = type && type.code;
             this.icon = type && `cc-${(ICONS[type.type] || type.type)}`;
             this.$set(this.card, 'brand', type ? type.type : null);
             this.$set(this.card, 'numberFormatted', format(this.card.number, this.type));
-            
+
             this.$refs.number.$el.dispatchEvent(new Event('revalidate'));
-        }
+        },
 
     },
-
-    created() {
-        this.card.numberFormatted = this.card.number;
-        this.updateExpiration();
-    },
-
-    data() {
-        const card = this.blankCard({
-            number: this.number,
-            expMonth: this.expMonth,
-            expYear: this.expYear,
-            cvc: this.cvc,
-            zip: this.zip,
-            name: this.name
-        });
-
-        const validated = Object.keys(card)
-            .reduce((carry, value) => {
-                carry[value] = this.errors[value] ? false : null;
-
-                return carry;
-            }, {});
-
-        return {
-            card,
-            validated,
-            icon: null,
-            code: null,
-            type: null,
-            focused: null,
-            isValid: null,
-            showSecurityFields: !!card.number,
-            currentErrors: Object.assign({
-                number: this.error
-            }, this.errors)
-        }
-    }
 
 };
 </script>
@@ -549,12 +538,12 @@ export default {
         & > .form-group {
             border-color: $danger;
         }
-        
+
         .is-invalid.custom-input-field .custom-control,
         .is-invalid.custom-select {
             color: $danger;
             background-color: lighten($danger, 45%);
-        }      
+        }
     }
 
     .credit-card-field-rows {
@@ -582,7 +571,7 @@ export default {
             & > :first-child .custom-control {
                 border-bottom-left-radius : .25em;
             }
-            
+
             &:not(:first-child) > :not(:last-child) {
                 .custom-select,
                 .custom-control {
@@ -597,7 +586,7 @@ export default {
 
         &.has-error {
             &:not(:last-child) {
-                
+
             }
 
             .credit-card-field-icon {
@@ -688,7 +677,8 @@ export default {
     }
 
     &.has-errors .invalid-feedback {
-        display: block;
+        display: none !important;
+        /*display: block;*/
         margin-bottom: 1rem;
     }
 }

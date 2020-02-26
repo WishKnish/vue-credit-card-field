@@ -1,12 +1,12 @@
 import validator from 'card-validator';
-import { input, value, shouldFormat } from '../Helpers';
+import { input, value, shouldFormat, } from '../Helpers';
 
 const METHODS = {
     'cvc': 'cvv',
     'zip': 'postalCode',
     'date': 'expirationDate',
     'year': 'expirationYear',
-    'month': 'expirationMonth'
+    'month': 'expirationMonth',
 };
 
 validator.name = function name(value) {
@@ -15,7 +15,7 @@ validator.name = function name(value) {
 
     return {
         isValid,
-        isPotentiallyValid
+        isPotentiallyValid,
     };
 };
 
@@ -42,27 +42,27 @@ export default {
                     return vnode.context[attr];
                 }
                 else {
-                    vnode.context.$set(carry, attr, value);        
+                    vnode.context.$set(carry, attr, value);
                 }
             }, null);
         }
-                
+
         function validate(force = false) {
             return e => {
-                if( shouldFormat(e) && 
-                    !!e.target.value && 
+                if( shouldFormat(e) &&
+                    !!e.target.value &&
                     (e.target.value !== prevValue || force)) {
-                        
+
                     dispatch(e.target.value, force);
-                    
+
                     prevValue = e.target.value;
-                }            
+                }
             };
         }
-        
+
         function dispatch(str, force = false) {
             const response = method(str, value(vnode.data.attrs.validator));
-                  
+
             if(!response.isValid && (!response.isPotentiallyValid || force)) {
                 el.dispatchEvent(new Event('invalid'));
             }
@@ -72,9 +72,9 @@ export default {
             else if(response.isPotentiallyValid) {
                 el.dispatchEvent(new Event('potentially-valid'));
             }
-            
+
             el.dispatchEvent(Object.assign(new Event('validate'), {
-                response
+                response,
             }));
         }
 
@@ -88,19 +88,19 @@ export default {
 
         inputEl.addEventListener('revalidate', dispatch);
         inputEl.addEventListener('blur', validate(true));
-        inputEl.addEventListener('keyup',  validate());
+        inputEl.addEventListener('keyup', validate());
 
         inputEl.addEventListener('keydown', e => {
             if(shouldFormat(e)) {
                 prevValue = e.target.value;
             }
         });
-        
+
         el.addEventListener('valid', e => set(true));
         el.addEventListener('invalid', e => set(false));
-        el.addEventListener('potentially-valid', e =>  set(null));
+        el.addEventListener('potentially-valid', e => set(null));
 
-        el.addEventListener('validate', ({ response }) => {
+        el.addEventListener('validate', ({ response, }) => {
             vnode.componentInstance.$emit('validate', el, response, get());
         });
 
@@ -111,6 +111,6 @@ export default {
                 dispatch(inputEl.value);
             }
         }
-    }
+    },
 
 };

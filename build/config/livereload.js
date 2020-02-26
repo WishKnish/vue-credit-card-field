@@ -1,5 +1,5 @@
 // import fs from 'fs';
-import { SRC } from './paths';
+import { SRC, } from './paths';
 
 export default {
     watch: SRC,

@@ -3,5 +3,5 @@ import InlineCreditCardField from './Components/InlineCreditCardField';
 
 export default {
     CreditCardField,
-    InlineCreditCardField
+    InlineCreditCardField,
 };

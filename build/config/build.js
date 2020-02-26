@@ -1,7 +1,7 @@
 export default {
     es: {
         postcss: {
-            extract: false
-        }
-    }
+            extract: false,
+        },
+    },
 };

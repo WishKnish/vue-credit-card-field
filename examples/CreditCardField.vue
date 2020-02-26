@@ -18,8 +18,7 @@
                 error="test"
                 @change="onChange"
                 @valid="onValid"
-                @invalid="onInvalid"
-            />
+                @invalid="onInvalid" />
         </form>
 
         <p>
@@ -40,7 +39,14 @@ import CreditCardField from '../src/Components/CreditCardField';
 export default {
 
     components: {
-        CreditCardField
+        CreditCardField,
+    },
+
+    data() {
+        return {
+            card: {},
+            activity: false,
+        };
     },
 
     methods: {
@@ -59,16 +65,9 @@ export default {
 
         onInvalid() {
             // console.log('invalid', arguments)
-        }
+        },
 
     },
 
-    data() {
-        return {
-            card: {},
-            activity: false
-        }
-    }
-
-}
+};
 </script>

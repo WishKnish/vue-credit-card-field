@@ -13,7 +13,7 @@
 
         <h3>Basic Usage</h3>
 
-        <inline-credit-card-field v-model="card"></inline-credit-card-field>
+        <inline-credit-card-field v-model="card" />
 
         <p>
             The field works like most input fields and will update the model reactively.
@@ -31,36 +31,40 @@
 
         <div class="row">
             <div class="col-sm-3">
-                <inline-credit-card-field v-model="card"></inline-credit-card-field>
+                <inline-credit-card-field v-model="card" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <inline-credit-card-field v-model="card"></inline-credit-card-field>
+                <inline-credit-card-field v-model="card" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-5">
-                <inline-credit-card-field v-model="card"></inline-credit-card-field>
+                <inline-credit-card-field v-model="card" />
             </div>
         </div>
 
         <hr>
 
         <h3>Sizes</h3>
-        
-        <inline-credit-card-field size="sm"></inline-credit-card-field>
-        <inline-credit-card-field size="md"></inline-credit-card-field>
-        <inline-credit-card-field size="lg"></inline-credit-card-field>
+
+        <inline-credit-card-field size="sm" />
+        <inline-credit-card-field size="md" />
+        <inline-credit-card-field size="lg" />
 
         <hr>
 
         <h3>Activity Indicator</h3>
 
-        <inline-credit-card-field :activity="showActivity"></inline-credit-card-field>
+        <inline-credit-card-field :activity="showActivity" />
 
-        <button v-if="!showActivity" class="btn btn-primary" @click="showActivity = true">Show Activity</button>
-        <button v-if="showActivity" class="btn btn-danger" @click="showActivity = false">Hide Activity</button>
+        <button v-if="!showActivity" class="btn btn-primary" @click="showActivity = true">
+            Show Activity
+        </button>
+        <button v-if="showActivity" class="btn btn-danger" @click="showActivity = false">
+            Hide Activity
+        </button>
 
         <hr>
 
@@ -74,7 +78,7 @@
 
         <h4>String</h4>
 
-        <inline-credit-card-field error="Pass an error back from the server..."></inline-credit-card-field>
+        <inline-credit-card-field error="Pass an error back from the server..." />
 
         <h4>Object</h4>
 
@@ -84,7 +88,7 @@
             strings.
         </p>
 
-        <inline-credit-card-field name="credit_card" :errors="{'credit_card': ['This is error #1', 'This is error #2']}"></inline-credit-card-field>
+        <inline-credit-card-field name="credit_card" :errors="{'credit_card': ['This is error #1', 'This is error #2']}" />
 
         <hr>
 
@@ -99,8 +103,7 @@
             @change="lastChangeEvent = $event"
             @valid="lastValidEvent = $event"
             @invalid="lastInvalidEvent = $event"
-            @complete="lastCompleteEvent = $event">
-        </inline-credit-card-field>
+            @complete="lastCompleteEvent = $event" />
 
         <div v-if="lastChangeEvent" class="alert alert-warning">
             Card Change Event: {{ lastChangeEvent }}
@@ -126,7 +129,7 @@ import InlineCreditCardField from '../src/Components/InlineCreditCardField';
 export default {
 
     components: {
-        InlineCreditCardField
+        InlineCreditCardField,
     },
 
     data() {
@@ -136,9 +139,9 @@ export default {
             lastChangeEvent: null,
             lastValidEvent: null,
             lastInvalidEvent: null,
-            lastCompleteEvent: null
-        }
-    }
+            lastCompleteEvent: null,
+        };
+    },
 
-}
+};
 </script>

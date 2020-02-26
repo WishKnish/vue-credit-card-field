@@ -11,5 +11,5 @@ export {
     input,
     set,
     shouldFormat,
-    value
+    value,
 };

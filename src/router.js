@@ -6,7 +6,7 @@ export default new VueRouter({
         {
             path: '/*',
             name: 'home',
-            component: App
-        }
-    ]
+            component: App,
+        },
+    ],
 });

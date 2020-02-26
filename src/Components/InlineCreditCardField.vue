@@ -1,60 +1,58 @@
 <template>
-
     <form-group class="credit-card-field-wrapper" @click="onClick">
-
         <slot name="control">
             <div class="credit-card-field" :class="mergeClasses(controlClasses, variantClass, classes)">
                 <div class="credit-card-field-icon-wrapper">
                     <div class="credit-card-field-icon-card">
                         <div class="credit-card-field-icon-front">
-                            <icon :icon="['fab', 'cc-jcb']" data-brand="jcb" class="credit-card-field-icon"/>
-                            <icon :icon="['fab', 'cc-visa']" data-brand="visa" class="credit-card-field-icon"/>
-                            <icon :icon="['fab', 'cc-amex']" data-brand="amex" class="credit-card-field-icon"/>
-                            <icon :icon="['fab', 'cc-discover']" data-brand="discover" class="credit-card-field-icon"/>
-                            <icon :icon="['fab', 'cc-mastercard']" data-brand="mastercard" class="credit-card-field-icon"/>
-                            <icon :icon="['fab', 'cc-diners-club']" data-brand="dinersclub" class="credit-card-field-icon"/>
-                            <icon :icon="['far', 'credit-card']" data-brand="unknown" class="credit-card-field-icon" width="20" height="18"/>
+                            <icon :icon="['fab', 'cc-jcb']" data-brand="jcb" class="credit-card-field-icon" />
+                            <icon :icon="['fab', 'cc-visa']" data-brand="visa" class="credit-card-field-icon" />
+                            <icon :icon="['fab', 'cc-amex']" data-brand="amex" class="credit-card-field-icon" />
+                            <icon :icon="['fab', 'cc-discover']" data-brand="discover" class="credit-card-field-icon" />
+                            <icon :icon="['fab', 'cc-mastercard']" data-brand="mastercard" class="credit-card-field-icon" />
+                            <icon :icon="['fab', 'cc-diners-club']" data-brand="dinersclub" class="credit-card-field-icon" />
+                            <icon :icon="['far', 'credit-card']" data-brand="unknown" class="credit-card-field-icon" width="20" height="18" />
                         </div>
                         <div class="credit-card-field-icon-back">
-                            <icon :icon="['fas', 'credit-card']" class="credit-card-field-icon" width="23.33" height="20"/>
+                            <icon :icon="['fas', 'credit-card']" class="credit-card-field-icon" width="23.33" height="20" />
                         </div>
                     </div>
                 </div>
 
                 <div class="credit-card-field-fields">
-                    <input v-focus.transform v-validate:number="validateNumber" v-model="card.number" max="19" type="text" placeholder="Card number" class="credit-card-field-field credit-card-field-number" :class="mergeClasses({'is-empty': !card.number, 'is-invalid': validated.number === false})">
+                    <input v-model="card.number" v-focus.transform v-validate:number="validateNumber" max="19" type="text" placeholder="Card number" class="credit-card-field-field credit-card-field-number" :class="mergeClasses({'is-empty': !card.number, 'is-invalid': validated.number === false})">
 
                     <div class="credit-card-field-security-fields">
-                        <input v-focus v-validate:expiration="validateExpiration" v-model="card.expiration" type="text" placeholder="MM / YY" maxlength="7" class="credit-card-field-field credit-card-field-expiration" :class="mergeClasses({'is-empty': !card.expiration, 'is-invalid': validated.expiration === false})">
-                        <input v-focus="validateCvc" v-validate:cvc="validateCvc" v-model="card.cvc" type="text" placeholder="CVC" autocomplete="off" class="credit-card-field-field credit-card-field-cvc" :class="mergeClasses({'is-empty': !card.cvc, 'is-invalid': validated.cvc === false})">
-                        <input v-focus="validatePostalCode" v-validate:postalCode="validatePostalCode" v-model="card.postalCode" max="5" type="text" placeholder="Zip" maxlength="5" class="credit-card-field-field credit-card-field-postal" :class="mergeClasses({'is-empty': !card.postalCode, 'is-invalid': validated.postalCode === false})">
+                        <input v-model="card.expiration" v-focus v-validate:expiration="validateExpiration" type="text" placeholder="MM / YY" maxlength="7" class="credit-card-field-field credit-card-field-expiration" :class="mergeClasses({'is-empty': !card.expiration, 'is-invalid': validated.expiration === false})">
+                        <input v-model="card.cvc" v-focus="validateCvc" v-validate:cvc="validateCvc" type="text" placeholder="CVC" autocomplete="off" class="credit-card-field-field credit-card-field-cvc" :class="mergeClasses({'is-empty': !card.cvc, 'is-invalid': validated.cvc === false})">
+                        <input v-model="card.postalCode" v-focus="validatePostalCode" v-validate:postalCode="validatePostalCode" :max="cardZipCodeMaxLength" type="text" :placeholder="cardZipCodePlaceholder" :maxlength="cardZipCodeMaxLength" class="credit-card-field-field credit-card-field-postal" :class="mergeClasses({'is-empty': !card.postalCode, 'is-invalid': validated.postalCode === false})">
                     </div>
 
-                    <div class="credit-card-field-placeholder-mask">Number</div>
-                    <div class="credit-card-field-number-mask" v-html="card.number"></div>
+                    <div class="credit-card-field-placeholder-mask">
+                        Number
+                    </div>
+                    <div class="credit-card-field-number-mask" v-html="card.number" />
                 </div>
             </div>
         </slot>
 
         <slot name="activity-indicator">
             <div v-show="activity" class="credit-card-field-activity">
-                <activity-indicator size="sm" type="dots" center/>
+                <activity-indicator size="sm" type="dots" center />
             </div>
         </slot>
 
-        <slot/>
+        <slot />
 
         <slot name="help">
             <help-text v-if="helpText" v-html="helpText" />
         </slot>
 
         <slot name="feedback">
-            <form-feedback v-if="validFeedback" v-html="validFeedback" valid />
-            <form-feedback v-if="invalidFeedback" v-html="invalidFeedback" invalid />
+            <form-feedback v-if="validFeedback" valid v-html="validFeedback" />
+            <form-feedback v-if="invalidFeedback" invalid v-html="invalidFeedback" />
         </slot>
-
     </form-group>
-
 </template>
 
 <script>
@@ -66,54 +64,19 @@ import FormControl from 'vue-interface/src/Mixins/FormControl';
 import FormGroup from 'vue-interface/src/Components/FormGroup';
 import MergeClasses from 'vue-interface/src/Mixins/MergeClasses';
 import FormFeedback from 'vue-interface/src/Components/FormFeedback';
-import { FontAwesomeIcon as Icon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon as Icon, } from '@fortawesome/vue-fontawesome';
 import ActivityIndicator from 'vue-interface/src/Components/ActivityIndicator';
 
 export default {
 
-    name: 'credit-card-field',
-
-    mixins: [
-        MergeClasses,
-        Variant,
-        FormControl
-    ],
+    name: 'CreditCardField',
 
     components: {
         ActivityIndicator,
         FormGroup,
         FormFeedback,
         HelpText,
-        Icon
-    },
-
-    props: {
-
-        activity: {
-            type: Boolean,
-            default: false
-        }
-
-    },
-
-    watch: {
-        'card.number': function(newVal, oldVal) {
-            this.brand = this.card.brand = Payment.fns.cardType(newVal) || 'unknown';
-            this.validated.number = null;
-
-            if (this.$el.querySelector('.credit-card-field-lg')) {
-                this.showSecurityFields = this.card.number.length >= 14;
-            }
-        },
-        'card.expiration': function(newVal, oldVal) {
-            this.validated.expiration = null;
-        },
-        'card.cvc': function(newVal, oldVal) {
-            this.validated.cvc = null;
-        },
-        'card.postalCode': function(newVal, oldVal) {
-            this.validated.postalCode = null;
-        }
+        Icon,
     },
 
     directives: {
@@ -130,21 +93,26 @@ export default {
                     el.classList.remove('is-focused');
                     vnode.context.isFocused = false;
 
-                    if (binding.modifiers.transform && vnode.context.shouldTransform(el)) {
+                    if(binding.modifiers.transform && vnode.context.shouldTransform(el)) {
                         vnode.context.addTransform(el);
                     }
                 });
-            }
+            },
         },
         validate: {
             bind(el, binding, vnode) {
+
+                function isPostalCode() {
+                    return el.classList.contains('credit-card-field-postal');
+                }
+
                 function validate(isValid) {
                     vnode.context.validated[binding.arg] = el.value === '' ? false : binding.value && binding.value(el.value);
                     vnode.context.$emit(isValid ? 'valid' : 'invalid', vnode.context.getEventPayload(el, isValid));
 
-                    if (vnode.context.isComplete() &&
-                        vnode.context.isValid() &&
-                        vnode.context.hasChanged()) {
+                    if(vnode.context.isComplete() &&
+                  vnode.context.isValid() &&
+                  vnode.context.hasChanged()) {
                         vnode.context.$emit('complete', vnode.context.getEventPayload(el, isValid));
                     }
                 }
@@ -156,10 +124,10 @@ export default {
                 el.addEventListener('keydown', event => {
                     const isValid = binding.value && binding.value(el.value);
 
-                    if ((isValid || maxLength()) && vnode.context.isPrintableKeyCode(event)) {
+                    if((isValid || maxLength()) && vnode.context.isPrintableKeyCode(event) && !isPostalCode()) {
                         event.preventDefault();
                     }
-                    else if (!el.value && event.keyCode === 8) {
+                    else if(!el.value && event.keyCode === 8) {
                         vnode.context.focusPrevElement(el);
                     }
 
@@ -167,20 +135,20 @@ export default {
                 });
 
                 el.addEventListener('keyup', event => {
-                    if (vnode.context.isPrintableKeyCode(event)) {
+                    if(vnode.context.isPrintableKeyCode(event)) {
                         const isValid = binding.value && binding.value(el.value);
 
-                        if (maxLength()) {
+                        if(maxLength() && !isPostalCode()) {
                             validate(isValid);
                         }
 
-                        if (isValid) {
+                        if(isValid) {
                             vnode.context.focusNextElement(el);
                         }
 
                         vnode.context.$emit('input', vnode.context.card);
 
-                        if (vnode.context.hasChanged()) {
+                        if(vnode.context.hasChanged()) {
                             vnode.context.$emit('change', vnode.context.getEventPayload(el, isValid));
                         }
                     }
@@ -189,8 +157,57 @@ export default {
                 el.addEventListener('blur', event => {
                     el.value !== '' && validate(binding.value && binding.value(el.value));
                 });
-            }
-        }
+            },
+        },
+    },
+
+    mixins: [
+        MergeClasses,
+        Variant,
+        FormControl,
+    ],
+
+    props: {
+
+        activity: {
+            type: Boolean,
+            default: false,
+        },
+
+        cardZipCodePlaceholder: {
+            type: String,
+            default: 'Postal Code',
+        },
+
+        cardZipCodeMaxLength: {
+            type: Number,
+            default: 5,
+        },
+
+    },
+
+    data() {
+        return {
+            width: null,
+            isFocused: false,
+            focusedElement: null,
+            previousValue: null,
+            showSecurityFields: false,
+            brand: null,
+            validated: {
+                number: null,
+                expiration: null,
+                cvc: null,
+                postalCode: null,
+            },
+            card: {
+                brand: null,
+                number: null,
+                expiration: null,
+                cvc: null,
+                postalCode: null,
+            },
+        };
     },
 
     computed: {
@@ -202,24 +219,62 @@ export default {
                 'credit-card-field-lg': this.width > 400,
                 'has-activity': this.activity,
                 'is-focused': this.isFocused,
-                'is-invalid': this.isInvalid()
+                'is-invalid': this.isInvalid(),
             };
 
             classes[`brand-${this.brand || 'unknown'}`] = true;
 
-            if (this.isFocused) {
+            if(this.isFocused) {
                 classes[`is-focused-${this.getClassName(this.focusedElement)}`] = true;
             }
-            else if (this.focusedElement) {
+            else if(this.focusedElement) {
                 classes[`last-focused-${this.getClassName(this.focusedElement)}`] = true;
             }
 
-            for (let i in this.validated) {
+            for(let i in this.validated) {
                 classes[`is-invalid-${i}`] = this.validated[i] === false;
             }
 
             return classes;
-        }
+        },
+    },
+
+    watch: {
+        'card.number': function(newVal, oldVal) {
+            this.brand = this.card.brand = Payment.fns.cardType(newVal) || 'unknown';
+            this.validated.number = null;
+
+            if(this.$el.querySelector('.credit-card-field-lg')) {
+                this.showSecurityFields = this.card.number.length >= 14;
+            }
+        },
+        'card.expiration': function(newVal, oldVal) {
+            this.validated.expiration = null;
+        },
+        'card.cvc': function(newVal, oldVal) {
+            this.validated.cvc = null;
+        },
+        'card.postalCode': function(newVal, oldVal) {
+            this.validated.postalCode = null;
+        },
+    },
+
+    created() {
+        this.card = this.getDefaultCard();
+    },
+
+    mounted() {
+        Payment.formatCardCVC(this.$el.querySelector('.credit-card-field-cvc'));
+        Payment.formatCardNumber(this.$el.querySelector('.credit-card-field-number'));
+        Payment.formatCardExpiry(this.$el.querySelector('.credit-card-field-expiration'));
+
+        this.$emit('input', this.card);
+
+        window.addEventListener('resize', this.onResize());
+    },
+
+    destroyed() {
+        window.removeEventListener('resize', this.onResize);
     },
 
     methods: {
@@ -229,7 +284,7 @@ export default {
             const parts = el.value.split(' ');
             const totalWidth = positionInfo.width;
             const width = this.getTextWidth(parts[parts.length - 1].trim(), el);
-            el.style.transform = 'translateX(' + ((totalWidth - width) * -1) + 'px)';
+            el.style.transform = `translateX(${ (totalWidth - width) * -1 }px)`;
         },
 
         shouldTransform(el, offset = 1.25) {
@@ -242,7 +297,7 @@ export default {
                 number: this.$attrs.number || '',
                 expiration: this.$attrs.expiration || '',
                 cvc: this.$attrs.cvc || '',
-                postalCode: this.$attrs.postalCode || ''
+                postalCode: this.$attrs.postalCode || '',
             };
         },
 
@@ -266,8 +321,8 @@ export default {
                 complete: this.isComplete(),
                 input: {
                     el: el,
-                    valid: isValid
-                }
+                    valid: isValid,
+                },
             };
         },
 
@@ -289,19 +344,19 @@ export default {
         },
 
         focusNextElement(el) {
-            if (el.nextElementSibling && el.nextElementSibling.children[0]) {
+            if(el.nextElementSibling && el.nextElementSibling.children[0]) {
                 el.nextElementSibling.children[0].focus();
             }
-            else if (el.nextElementSibling) {
+            else if(el.nextElementSibling) {
                 el.nextElementSibling.focus();
             }
         },
 
         focusPrevElement(el) {
-            if (!el.value && el.previousElementSibling) {
+            if(!el.value && el.previousElementSibling) {
                 el.previousElementSibling.focus();
             }
-            else if (!el.value) {
+            else if(!el.value) {
                 this.$el.querySelector('.credit-card-field-number').focus();
             }
         },
@@ -323,7 +378,7 @@ export default {
         },
 
         validatePostalCode(value) {
-            return value.match(/^\d{5}(?:[-\s]\d{4})?$/) !== null;
+            return value.match(/^[a-z0-9]*$/) !== null;
         },
 
         isPrintableKeyCode(event) {
@@ -340,18 +395,20 @@ export default {
         },
 
         isValid() {
-            for (let i in this.validated) {
-                if (this.validated[i] !== true) {
+            for( let i in this.validated ) {
+                if( i === 'postalCode' ) {
+                    continue;
+                }
+                if( this.validated[ i ] === false ) {
                     return false;
                 }
             }
-
             return true;
         },
 
         isInvalid() {
-            for (let i in this.validated) {
-                if (this.validated[i] === false) {
+            for(let i in this.validated) {
+                if(this.validated[i] === false) {
                     return true;
                 }
             }
@@ -363,8 +420,7 @@ export default {
             return !!((
                 this.validated.number &&
                 this.validated.expiration &&
-                this.validated.cvc &&
-                this.validated.postalCode
+                this.validated.cvc
             ));
         },
 
@@ -374,55 +430,12 @@ export default {
         },
 
         onClick(event) {
-            if (!event.target.classList.contains('credit-card-field-field')) {
+            if(!event.target.classList.contains('credit-card-field-field')) {
                 this.focusedElement ? this.focusedElement.focus() : this.$el.querySelector('.credit-card-field-field').focus();
             }
-        }
+        },
 
     },
-
-    created() {
-        this.card = this.getDefaultCard();
-    },
-
-    mounted() {
-        Payment.formatCardCVC(this.$el.querySelector('.credit-card-field-cvc'));
-        Payment.restrictNumeric(this.$el.querySelector('.credit-card-field-postal'));
-        Payment.formatCardNumber(this.$el.querySelector('.credit-card-field-number'));
-        Payment.formatCardExpiry(this.$el.querySelector('.credit-card-field-expiration'));
-
-        this.$emit('input', this.card);
-
-        window.addEventListener('resize', this.onResize());
-    },
-
-    destroyed() {
-        window.removeEventListener('resize', this.onResize);
-    },
-
-    data() {
-        return {
-            width: null,
-            isFocused: false,
-            focusedElement: null,
-            previousValue: null,
-            showSecurityFields: false,
-            brand: null,
-            validated: {
-                number: null,
-                expiration: null,
-                cvc: null,
-                postalCode: null
-            },
-            card: {
-                brand: null,
-                number: null,
-                expiration: null,
-                cvc: null,
-                postalCode: null
-            }
-        };
-    }
 
 };
 </script>
