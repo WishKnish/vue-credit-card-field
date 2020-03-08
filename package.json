@@ -1,5 +1,5 @@
 {
-  "name": "vue-credit-card-field",
+  "name": "@wishknish/vue-credit-card-field",
   "description": "A generic Bootstrap 4 capatible credit card field that mimics Stripe's behavior.",
   "version": "0.3.8",
   "module": "./src/index.js",
