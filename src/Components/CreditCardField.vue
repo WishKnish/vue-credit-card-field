@@ -22,119 +22,110 @@
                         @card-types.native="onCardTypeChange"
                         @valid.native="() => onValid('number', showName ? 'name' : 'expMonth')">
                         <template #activity>
-                            <animate-css name="fade">
-                                <activity-indicator v-if="activity" key="activity" :size="size" />
-                                <div v-else key="icons" class="credit-card-icons">
-                                    <animate-css mode="out-in" name="flip" y>
-                                        <div v-if="focused !== 'cvc'" key="front" class="credit-card-field-icon-card">
-                                            <icon :icon="[icon ? 'fab' : 'far', icon || 'credit-card']" :data-brand="type && type.niceType || 'unknown'" class="credit-card-field-icon" width="20" height="18" />
-                                        </div>
-                                        <div v-else key="back" class="credit-card-field-icon-card">
-                                            <icon :icon="['fas', 'credit-card']" class="credit-card-field-icon" width="23.33" height="20" />
-                                        </div>
-                                    </animate-css>
+                            <activity-indicator v-if="activity" key="activity" :size="size" />
+                            <div v-else key="icons" class="credit-card-icons">
+                                <div v-if="focused !== 'cvc'" key="front" class="credit-card-field-icon-card">
+                                    <icon :icon="[icon ? 'fab' : 'far', icon || 'credit-card']" :data-brand="type && type.niceType || 'unknown'" class="credit-card-field-icon" width="20" height="18" />
                                 </div>
-                            </animate-css>
+                                <div v-else key="back" class="credit-card-field-icon-card">
+                                    <icon :icon="['fas', 'credit-card']" class="credit-card-field-icon" width="23.33" height="20" />
+                                </div>
+                            </div>
                         </template>
                     </input-field>
                 </div>
+                <div v-if="showSecurityFields && showName" class="credit-card-field-row" :class="{'has-error': currentErrors.name}">
+                    <input-field
+                        id="name"
+                        ref="name"
+                        v-model="card.name"
+                        v-bubble:focus="() => focused = 'name'"
+                        v-validate:name="validated.name"
+                        :disabled="activity"
+                        :errors="currentErrors"
+                        custom
+                        name="name"
+                        :label="cardNamePlaceholder"
+                        :placeholder="cardNamePlaceholder"
+                        class="credit-card-field-name" />
+                </div>
+                <div v-if="showSecurityFields" class="credit-card-field-row d-flex" :class="{'has-error': currentErrors.expMonth || currentErrors.expYear || currentErrors.cvc}">
+                    <select-field
+                        id="expMonth"
+                        ref="expMonth"
+                        v-model="card.expMonth"
+                        v-bubble
+                        v-bubble:blur="onBlur"
+                        v-bubble:focus="() => focused = 'expMonth'"
+                        v-validate:month="validated.expMonth"
+                        :disabled="activity"
+                        :errors="currentErrors"
+                        custom
+                        name="expMonth"
+                        :label="cardMonthPlaceholder"
+                        :placeholder="cardMonthPlaceholder"
+                        class="credit-card-field-month"
+                        @valid.native="() => onValid('expMonth', 'expYear')">
+                        <option v-for="i in 12" :key="i">
+                            {{ padZero(i, 2) }}
+                        </option>
+                    </select-field>
 
-                <animate-css name="fade">
-                    <div v-if="showSecurityFields && showName" class="credit-card-field-row" :class="{'has-error': currentErrors.name}">
-                        <input-field
-                            id="name"
-                            ref="name"
-                            v-model="card.name"
-                            v-bubble:focus="() => focused = 'name'"
-                            v-validate:name="validated.name"
-                            :disabled="activity"
-                            :errors="currentErrors"
-                            custom
-                            name="name"
-                            :label="cardNamePlaceholder"
-                            :placeholder="cardNamePlaceholder"
-                            class="credit-card-field-name" />
-                    </div>
-                </animate-css>
-                <animate-css name="fade">
-                    <div v-if="showSecurityFields" class="credit-card-field-row d-flex" :class="{'has-error': currentErrors.expMonth || currentErrors.expYear || currentErrors.cvc}">
-                        <select-field
-                            id="expMonth"
-                            ref="expMonth"
-                            v-model="card.expMonth"
-                            v-bubble
-                            v-bubble:blur="onBlur"
-                            v-bubble:focus="() => focused = 'expMonth'"
-                            v-validate:month="validated.expMonth"
-                            :disabled="activity"
-                            :errors="currentErrors"
-                            custom
-                            name="expMonth"
-                            :label="cardMonthPlaceholder"
-                            :placeholder="cardMonthPlaceholder"
-                            class="credit-card-field-month"
-                            @valid.native="() => onValid('expMonth', 'expYear')">
-                            <option v-for="i in 12" :key="i">
-                                {{ padZero(i, 2) }}
-                            </option>
-                        </select-field>
+                    <select-field
+                        id="expYear"
+                        ref="expYear"
+                        v-model="card.expYear"
+                        v-bubble
+                        v-bubble:blur="onBlur"
+                        v-bubble:focus="() => focused = 'expYear'"
+                        v-validate:year="validated.expYear"
+                        :disabled="activity"
+                        :errors="currentErrors"
+                        custom
+                        name="expYear"
+                        :label="cardYearPlaceholder"
+                        :placeholder="cardYearPlaceholder"
+                        class="credit-card-field-year"
+                        @valid.native="() => onValid('expYear', 'cvc')">
+                        <option v-for="i in years" :key="i">
+                            {{ i }}
+                        </option>
+                    </select-field>
 
-                        <select-field
-                            id="expYear"
-                            ref="expYear"
-                            v-model="card.expYear"
-                            v-bubble
-                            v-bubble:blur="onBlur"
-                            v-bubble:focus="() => focused = 'expYear'"
-                            v-validate:year="validated.expYear"
-                            :disabled="activity"
-                            :errors="currentErrors"
-                            custom
-                            name="expYear"
-                            :label="cardYearPlaceholder"
-                            :placeholder="cardYearPlaceholder"
-                            class="credit-card-field-year"
-                            @valid.native="() => onValid('expYear', 'cvc')">
-                            <option v-for="i in years" :key="i">
-                                {{ i }}
-                            </option>
-                        </select-field>
+                    <input-field
+                        id="cvc"
+                        ref="cvc"
+                        v-model="card.cvc"
+                        v-bubble
+                        v-bubble:blur="onBlur"
+                        v-bubble:focus="() => focused = 'cvc'"
+                        v-validate:cvc="validated.cvc"
+                        :disabled="activity"
+                        :errors="currentErrors"
+                        :maxlength="code && code.size"
+                        :label="code && code.name || cardCvvPlaceholder"
+                        :placeholder="code && code.name || cardCvvPlaceholder"
+                        :validator="() => type && type.code.size"
+                        custom
+                        name="cvc"
+                        class="credit-card-field-cvc"
+                        @valid.native="() => onValid('cvc', 'zip')" />
 
-                        <input-field
-                            id="cvc"
-                            ref="cvc"
-                            v-model="card.cvc"
-                            v-bubble
-                            v-bubble:blur="onBlur"
-                            v-bubble:focus="() => focused = 'cvc'"
-                            v-validate:cvc="validated.cvc"
-                            :disabled="activity"
-                            :errors="currentErrors"
-                            :maxlength="code && code.size"
-                            :label="code && code.name || cardCvvPlaceholder"
-                            :placeholder="code && code.name || cardCvvPlaceholder"
-                            :validator="() => type && type.code.size"
-                            custom
-                            name="cvc"
-                            class="credit-card-field-cvc"
-                            @valid.native="() => onValid('cvc', 'zip')" />
-
-                        <input-field
-                            id="zip"
-                            v-model="card.zip"
-                            v-bubble
-                            v-bubble:blur="onBlur"
-                            v-bubble:focus="() => focused = 'zip'"
-                            :disabled="activity"
-                            :errors="currentErrors"
-                            custom
-                            name="zip"
-                            :maxlength="cardZipCodeMaxLength"
-                            :label="cardZipCodePlaceholder"
-                            :placeholder="cardZipCodePlaceholder"
-                            class="credit-card-field-zip" />
-                    </div>
-                </animate-css>
+                    <input-field
+                        id="zip"
+                        v-model="card.zip"
+                        v-bubble
+                        v-bubble:blur="onBlur"
+                        v-bubble:focus="() => focused = 'zip'"
+                        :disabled="activity"
+                        :errors="currentErrors"
+                        custom
+                        name="zip"
+                        :maxlength="cardZipCodeMaxLength"
+                        :label="cardZipCodePlaceholder"
+                        :placeholder="cardZipCodePlaceholder"
+                        class="credit-card-field-zip" />
+                </div>
             </div>
 
             <slot />
@@ -165,7 +156,6 @@ import FormControl from 'vue-interface/src/Mixins/FormControl';
 import FormGroup from 'vue-interface/src/Components/FormGroup';
 import InputField from 'vue-interface/src/Components/InputField';
 import MergeClasses from 'vue-interface/src/Mixins/MergeClasses';
-import AnimateCss from 'vue-interface/src/Components/AnimateCss';
 import SelectField from 'vue-interface/src/Components/SelectField';
 import FormFeedback from 'vue-interface/src/Components/FormFeedback';
 import { FontAwesomeIcon as Icon, } from '@fortawesome/vue-fontawesome';
@@ -183,7 +173,6 @@ export default {
         Icon,
         HelpText,
         FormGroup,
-        AnimateCss,
         InputField,
         SelectField,
         FormFeedback,
